@@ -1,9 +1,9 @@
-const IncomeSchema = require("../models/incomeModel");
+const ExpenseSchema = require("../models/expenseModel");
 
-exports.addIncome = async (req, res) => {
+exports.addExpense = async (req, res) => {
   const { title, amount, category, description, date } = req.body;
 
-  const income = IncomeSchema({
+  const expense = ExpenseSchema({
     title,
     amount,
     category,
@@ -19,36 +19,36 @@ exports.addIncome = async (req, res) => {
     if (amount <= 0 || !amount === "number") {
       return res.status(400).json({ message: "Amount must be positive" });
     }
-    await income.save();
+    await expense.save();
 
-    res.status(200).json({ message: "Income added" });
+    res.status(200).json({ message: "Expense added" });
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
 
-  console.log(income);
+  console.log(expense);
 };
 
-exports.getIncomes = async (req, res) => {
+exports.getExpenses = async (req, res) => {
   try {
-    const incomes = await IncomeSchema.find().sort({ createdAt: -1 });
-    res.status(200).json(incomes);
+    const expenses = await ExpenseSchema.find().sort({ createdAt: -1 });
+    res.status(200).json(expenses);
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-exports.deleteIncome = async (req, res) => {
+exports.deleteExpense = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedIncome = await IncomeSchema.findByIdAndDelete(id);
-    if (!deletedIncome) {
-      return res.status(404).json({ message: "Income not found" });
+    const deletedExpense = await ExpenseSchema.findByIdAndDelete(id);
+    if (!deletedExpense) {
+      return res.status(404).json({ message: "Expense not found" });
     }
     return res
       .status(200)
-      .json({ message: "Income deleted", income: deletedIncome });
+      .json({ message: "Expense deleted", expense: deletedExpense });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Server Error" });

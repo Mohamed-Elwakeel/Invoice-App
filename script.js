@@ -32,7 +32,7 @@ fs.readdir("./routes", (err, files) => {
 });
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/invoice-DB")
+  .connect(process.env.DATABASE_URI)
   .then(() => {
     console.log("DB Connected");
   })

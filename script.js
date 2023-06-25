@@ -1,8 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const fs = require("fs");
+
+const cookieParser = require("cookie-parser");
+const authRoute = require("./routes/transactions");
 
 const { db } = require("./db/db");
 const routePath = "/api/v1";
@@ -13,7 +15,18 @@ const app = express();
 
 // middleware
 app.use(express.json());
-app.use(cors({}));
+
+app.use(
+  cors({
+    origin: ["http://localhost:4000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
+
+app.use("/", authRoute);
 
 // app.get("/", (req, res) => {
 //   res.send("Hello World!!");
@@ -32,7 +45,10 @@ fs.readdir("./routes", (err, files) => {
 });
 
 mongoose
-  .connect(process.env.DATABASE_URI)
+  .connect(process.env.DATABASE_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("DB Connected");
   })
